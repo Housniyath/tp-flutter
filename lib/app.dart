@@ -1,14 +1,19 @@
 import 'package:flutter/material.dart';
-import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:firebase_auth/firebase_auth.dart';
+import 'package:provider/provider.dart';
+import 'features/habits/controllers/habit_controller.dart';
 import 'features/auth/presentation/login_screen.dart';
+import 'features/habits/views/habit_list_page.dart';
 
-class HabitTrackerApp extends ConsumerWidget {
+
+class HabitTrackerApp extends StatelessWidget  {
   const HabitTrackerApp({super.key});
 
   @override
-  Widget build(BuildContext context, WidgetRef ref) {
-    return MaterialApp(
+   Widget build(BuildContext context)  {
+    return ChangeNotifierProvider( 
+      create:  (_)=> HabitController(),
+      child: MaterialApp(
       title: 'Habit Tracker',
       debugShowCheckedModeBanner: false,
       home: StreamBuilder<User?>(
@@ -25,11 +30,13 @@ class HabitTrackerApp extends ConsumerWidget {
             return const LoginScreen();
           }
           // Connecté → page d'accueil (à remplacer après)
-          return const Scaffold(
-            body: Center(child: Text('Bienvenue ! ✅')),
-          );
+          return const HabitListPage();
+
+          
         },
       ),
+    ),
     );
   }
-}
+  }
+
