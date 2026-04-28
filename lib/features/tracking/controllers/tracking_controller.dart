@@ -1,5 +1,6 @@
 import 'package:cloud_firestore/cloud_firestore.dart';
 import '../models/tracking_model.dart';
+import 'package:firebase_auth/firebase_auth.dart';
 
 class TrackingController {
   // on crée une référence vers la collection "logs" dans Firebase
@@ -9,17 +10,26 @@ class TrackingController {
   // la fonction pour recup toutes les habitudes créées par Noussi
   Future<List<Map<String, dynamic>>> getAllHabits() async {
     try {
-      // on pointe sur la collection d'habitudes 
-      QuerySnapshot query = await FirebaseFirestore.instance.collection('habits').get();
-      
-      return query.docs.map((doc) => {
-        'id': doc.id,
-        'nom': doc['name'] ?? 'Sans nom', // ici on adapte avec les vrais champs de la base 
-        'desc': doc['description'] ?? '',
-      }).toList();
-    } catch (e) {
-      print("Erreur lors de la récupération des habitudes : $e");
-      return [];
+     final userId = FirebaseAuth.instance.currentUser!.uid;
+    print("userId connecté : $userId"); // debug
+    
+    QuerySnapshot query = await FirebaseFirestore.instance
+        .collection('habits')
+        .where('userId', isEqualTo: userId)
+        .get();
+    
+    print("Nombre d'habitudes trouvées : ${query.docs.length}"); // debug
+    
+    return query.docs.map((doc) => {
+      'id': doc.id,
+      'nom': doc['name'] ?? 'Sans nom',
+      'desc': (doc.data() as Map<String, dynamic>).containsKey('description') 
+    ? doc['description'] 
+    : '',
+    }).toList();
+  } catch (e) {
+    print("Erreur : $e");
+    return [];
     }
   }
 

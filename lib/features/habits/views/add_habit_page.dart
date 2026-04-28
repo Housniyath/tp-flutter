@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
 import '../controllers/habit_controller.dart';
+import 'package:firebase_auth/firebase_auth.dart';
 
 class AddHabitPage extends StatefulWidget {
   const AddHabitPage({super.key});
@@ -34,7 +35,7 @@ class _AddHabitPageState extends State<AddHabitPage> {
                   final navigator = Navigator.of(context);
                   await context.read<HabitController>().ajouterHabitude(
                     _nameController.text, 
-                    'test_123'
+                    FirebaseAuth.instance.currentUser!.uid,
                   );
 
                   if (!mounted) return; 
