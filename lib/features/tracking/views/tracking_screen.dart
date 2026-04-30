@@ -1,6 +1,6 @@
 import 'package:flutter/material.dart';
 import '../../../core/Theme/app_colors.dart';
-import '../../../routes/app_routes.dart';
+import '../../../routes/app_routes_helper.dart';
 
 // Modèle local — Membre 3 remplacera par HabitLog + Firebase
 class _HabitEntry {

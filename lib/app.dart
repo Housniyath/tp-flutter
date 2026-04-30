@@ -4,6 +4,7 @@ import 'package:provider/provider.dart';
 import 'features/habits/controllers/habit_controller.dart';
 import 'features/auth/presentation/login_screen.dart';
 import 'features/habits/views/habit_list_page.dart';
+import 'core/Theme/app_theme.dart';
 
 
 class HabitTrackerApp extends StatelessWidget  {
@@ -16,6 +17,7 @@ class HabitTrackerApp extends StatelessWidget  {
       child: MaterialApp(
       title: 'Habit Tracker',
       debugShowCheckedModeBanner: false,
+      theme: AppTheme.lightTheme,
       home: StreamBuilder<User?>(
         stream: FirebaseAuth.instance.authStateChanges(),
         builder: (context, snapshot) {
