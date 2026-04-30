@@ -4,6 +4,7 @@ import 'package:firebase_auth/firebase_auth.dart';
 import '../controllers/habit_controller.dart';
 import 'add_habit_page.dart';
 import '../../tracking/views/tracking_page.dart';
+import '../../history/screens/history_screen.dart';
 
 class HabitListPage extends StatefulWidget {
   const HabitListPage({super.key});
@@ -39,6 +40,16 @@ class _HabitListPageState extends State<HabitListPage> {
               );
             },
           ),
+
+          IconButton(
+  icon: const Icon(Icons.history),
+  onPressed: () {
+    Navigator.push(
+      context,
+      MaterialPageRoute(builder: (context) => const HistoryScreen()),
+    );
+  },
+),
           IconButton(
             icon: const Icon(Icons.logout),
             onPressed: () => FirebaseAuth.instance.signOut(),

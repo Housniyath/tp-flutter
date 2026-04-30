@@ -27,9 +27,9 @@ class HistoryService {
   /// Stream temps réel de tous les logs d'une habitude spécifique.
   Stream<List<HabitLog>> logsForHabitStream(String habitId) {
     return _db
-        .collection('habit_logs')
+        .collection('logs')
         .where('habitId', isEqualTo: habitId)
-        .orderBy('completedAt', descending: true)
+        .orderBy('date', descending: true)
         .snapshots()
         .map((snap) =>
             snap.docs.map((d) => HabitLog.fromMap(d.data(), d.id)).toList());
@@ -37,12 +37,14 @@ class HistoryService {
 
   /// Stream temps réel de tous les logs d'un utilisateur (tous les habitudes).
   Stream<List<HabitLog>> allLogsStream(String userId) {
+    print("Récupération des logs pour userId : $userId");
     return _db
         .collection('habit_logs')
         .where('userId', isEqualTo: userId)
         .orderBy('completedAt', descending: true)
         .snapshots()
         .map((snap) =>
+        
             snap.docs.map((d) => HabitLog.fromMap(d.data(), d.id)).toList());
   }
 

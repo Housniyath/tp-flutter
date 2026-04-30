@@ -1,44 +1,34 @@
-/// Modèle représentant un log de complétion d'une habitude pour un jour donné.
+import 'package:cloud_firestore/cloud_firestore.dart';
+
 class HabitLog {
   final String id;
   final String habitId;
   final String userId;
-  final DateTime completedAt; // stocké en UTC
+  final DateTime dayUtc;
 
-  const HabitLog({
+  HabitLog({
     required this.id,
     required this.habitId,
     required this.userId,
-    required this.completedAt,
+    required this.dayUtc,
   });
 
-  /// Date normalisée à minuit UTC (pour comparaisons journalières)
-  DateTime get dayUtc => DateTime.utc(
-        completedAt.year,
-        completedAt.month,
-        completedAt.day,
-      );
+  factory HabitLog.fromMap(Map<String, dynamic> map, String id) {
+    // on essaie completedAt d'abord, sinon date
+    DateTime day;
+    if (map['completedAt'] is Timestamp) {
+      day = (map['completedAt'] as Timestamp).toDate().toUtc();
+    } else if (map['date'] is Timestamp) {
+      day = (map['date'] as Timestamp).toDate().toUtc();
+    } else {
+      day = DateTime.now().toUtc();
+    }
 
-  /// Depuis Firestore
-  factory HabitLog.fromMap(Map<String, dynamic> map, String docId) {
     return HabitLog(
-      id: docId,
-      habitId: map['habitId'] as String,
-      userId: map['userId'] as String,
-      completedAt: DateTime.parse(map['completedAt'] as String).toUtc(),
+      id: id,
+      habitId: map['habitId'] ?? '',
+      userId: map['userId'] ?? '',
+      dayUtc: day,
     );
   }
-
-  /// Vers Firestore
-  Map<String, dynamic> toMap() {
-    return {
-      'habitId': habitId,
-      'userId': userId,
-      'completedAt': completedAt.toUtc().toIso8601String(),
-    };
-  }
-
-  @override
-  String toString() =>
-      'HabitLog(id: $id, habitId: $habitId, day: ${dayUtc.toIso8601String()})';
 }
