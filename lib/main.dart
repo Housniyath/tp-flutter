@@ -1,21 +1,17 @@
 import 'package:flutter/material.dart';
-import 'core/Theme/app_theme.dart';    // ✅ chemin corrigé
-import 'routes/app_routes.dart';        // ✅ chemin corrigé
+import 'package:firebase_core/firebase_core.dart';
+import 'firebase_options.dart';
+import 'app.dart';
 
-void main() {
-  runApp(const MyApp());
-}
+Future<void> main() async {
+  WidgetsFlutterBinding.ensureInitialized();
 
-class MyApp extends StatelessWidget {
-  const MyApp({super.key});
+  // Initialisation de Firebase
+  await Firebase.initializeApp(
+    options: DefaultFirebaseOptions.currentPlatform,
+  );
 
-  @override
-  Widget build(BuildContext context) {
-    return MaterialApp(
-      title:                      'HabitFlow',
-      debugShowCheckedModeBanner: false,
-      theme:                      AppTheme.lightTheme,
-      routes:                     AppRoutes.routes,
-    );
-  }
+  runApp(
+      const HabitTrackerApp()
+  );
 }
